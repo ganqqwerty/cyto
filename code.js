@@ -3852,8 +3852,27 @@ window.addEventListener('DOMContentLoaded', function () {
 // maps the source JSON to the cytoscape compatible JSON.
 function cytoscapeMapper(sourceJSON) {
     const unique = [...new Set(sourceJSON.nodes)].sort()
+    const validSrcEdges = Object.entries(sourceJSON.graph)
+        .filter(([from, toList]) => toList.length>1 && toList[0] !== "" && from !== "")
+        .filter(([from, toList]) => unique.includes(from));
+    const edges = []
+    for (const [from, toList] of validSrcEdges){
+        for (const to of toList){
+            if (unique.includes(to)){
+                edges.push({
+                    data: {
+                        source: from,
+                        target: to
+                    }
+                })
+            }
+        }
+    }
+    const parentNodes = validSrcEdges.map(([from]) => from)
+    const childNodes = validSrcEdges.map(([from, toList]) => toList).flat()
     const nodes = unique
         .filter(Boolean)
+        .filter(node => parentNodes.includes(node) || childNodes.includes(node))
         .map(src => {
             return {
                 data: {
@@ -3862,22 +3881,7 @@ function cytoscapeMapper(sourceJSON) {
                 }
             }
         })
-    const validSrcEdges = Object.entries(sourceJSON.graph)
-        .filter(([from, toList]) => toList.length>1 && toList[0] !== "" && from !== "")
-        .filter(([from, toList]) => unique.includes(from));
-        const edges = []
-        for (const [from, toList] of validSrcEdges){
-            for (const to of toList){
-                if (unique.includes(to)){
-                    edges.push({
-                        data: {
-                            source: from,
-                            target: to
-                        }
-                    })
-                }
-            }
-        }
+
 
     return {
         nodes, edges
