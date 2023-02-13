@@ -3820,7 +3820,7 @@ window.addEventListener('DOMContentLoaded', function () {
         autounselectify: true,
 
         layout: {
-            name: 'grid'
+            name: 'concentric'
         },
 
         style: [
