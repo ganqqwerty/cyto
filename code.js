@@ -3820,7 +3820,7 @@ window.addEventListener('DOMContentLoaded', function () {
         autounselectify: true,
 
         layout: {
-            name: 'dagre'
+            name: 'grid'
         },
 
         style: [
@@ -3862,18 +3862,23 @@ function cytoscapeMapper(sourceJSON) {
                 }
             }
         })
-    const edges = Object.entries(sourceJSON.graph)
+    const validSrcEdges = Object.entries(sourceJSON.graph)
         .filter(([from, toList]) => toList.length>1 && toList[0] !== "" && from !== "")
-        .filter(([from, toList]) => unique.includes(from))
-        .map(([from, toList]) => {
-            return {
-                data: {
-                    source: from,
-                    target: toList[1]
+        .filter(([from, toList]) => unique.includes(from));
+        const edges = []
+        for (const [from, toList] of validSrcEdges){
+            for (const to of toList){
+                if (unique.includes(to)){
+                    edges.push({
+                        data: {
+                            source: from,
+                            target: to
+                        }
+                    })
                 }
             }
-        })
-    console.log(edges)
+        }
+
     return {
         nodes, edges
     }
