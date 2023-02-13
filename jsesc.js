@@ -142,7 +142,6 @@ const jsesc = (argument, options) => {
 	const useDecNumbers = options.numbers == 'decimal';
 	const useHexNumbers = options.numbers == 'hexadecimal';
 
-	debugger
 	if (json && argument && isFunction(argument.toJSON)) {
 		argument = argument.toJSON();
 	}
