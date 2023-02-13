@@ -1,3 +1,28 @@
+function codepoint (x) {
+    return jsesc(x, {
+        json: true,
+        minimal:false,
+        numbers: "hexadecimal",
+        quotes: "double",
+        wrap: true,
+        isScriptContext: true,
+        escapeEverything: true,
+        compact: true,
+    })
+}
+
+var encodeJavaScriptString = function f(a, b)
+{
+    return ++b                                 //`b` is a number (including 0) when `replace` calls the function
+        ? '\\' + (                               //all escape sequences start with a backslash
+        (a = a.charCodeAt()) >> 12             //all characters from U+1000 and above
+            ? 'u'                                //must start with `\u`
+            : a >> 8                             //all characters from U+0100 to U+0FFF
+                ? 'u0'                             //must start with `\u0`
+                : 'x'                              //characters from U+007F to U+00FF can start with `\u00` or `\x`
+    ) + a.toString(16).toUpperCase()       //add the upper case hex string (it does not contain leading zeros)
+        : a.replace(/[^\0-~]/g, f)               //else call the function for all non-ASCII characters (all except U+0000 to U+007E)
+}
 window.addEventListener('DOMContentLoaded', function(){
 
     var cy = window.cy = cytoscape({
@@ -14,7 +39,8 @@ window.addEventListener('DOMContentLoaded', function(){
             {
                 selector: 'node',
                 style: {
-                    'background-color': '#11479e'
+                    'background-color': '#11479e',
+                    'content': 'data(label)'
                 }
             },
 
@@ -32,7 +58,7 @@ window.addEventListener('DOMContentLoaded', function(){
 
         elements: {
             nodes: [
-                { data: { id: 'n0' } },
+                { data: { id: 'n0' , label: codepoint("止") }},
                 { data: { id: 'n1' } },
                 { data: { id: 'n2' } },
                 { data: { id: 'n3' } },
