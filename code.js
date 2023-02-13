@@ -1,3 +1,4 @@
+// class a{}
 function codepoint (x) {
     return jsesc(x, {
         json: true,
@@ -58,8 +59,8 @@ window.addEventListener('DOMContentLoaded', function(){
 
         elements: {
             nodes: [
-                { data: { id: 'n0' , label: codepoint("止") }},
-                { data: { id: 'n1' } },
+                { data: { id: 'n0' , label: JSON.parse(codepoint('止')) }},
+                { data: { id: 'n1', label: "\u03A9" } },
                 { data: { id: 'n2' } },
                 { data: { id: 'n3' } },
                 { data: { id: 'n4' } },
